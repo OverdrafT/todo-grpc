@@ -1,20 +1,20 @@
-package note
+package todo
 
 import (
 	"context"
 
 	sq "github.com/Masterminds/squirrel"
 
-	"github.com/olezhek28/platform_common/pkg/db"
+	"github.com/OverdrafT/todo-grpc/pkg/db"
 
-	"github.com/olezhek28/microservices_course/week_4/internal/model"
-	"github.com/olezhek28/microservices_course/week_4/internal/repository"
-	"github.com/olezhek28/microservices_course/week_4/internal/repository/note/converter"
-	modelRepo "github.com/olezhek28/microservices_course/week_4/internal/repository/note/model"
+	"github.com/OverdrafT/todo-grpc/internal/model"
+	"github.com/OverdrafT/todo-grpc/internal/repository"
+	"github.com/OverdrafT/todo-grpc/internal/repository/todo/converter"
+	modelRepo "github.com/OverdrafT/todo-grpc/internal/repository/todo/model"
 )
 
 const (
-	tableName = "note"
+	tableName = "todo"
 
 	idColumn        = "id"
 	titleColumn     = "title"
@@ -27,11 +27,11 @@ type repo struct {
 	db db.Client
 }
 
-func NewRepository(db db.Client) repository.NoteRepository {
+func NewRepository(db db.Client) repository.TodoRepository {
 	return &repo{db: db}
 }
 
-func (r *repo) Create(ctx context.Context, info *model.NoteInfo) (int64, error) {
+func (r *repo) Create(ctx context.Context, info *model.TodoNoteInfo) (int64, error) {
 	builder := sq.Insert(tableName).
 		PlaceholderFormat(sq.Dollar).
 		Columns(titleColumn, contentColumn).
@@ -57,7 +57,7 @@ func (r *repo) Create(ctx context.Context, info *model.NoteInfo) (int64, error) 
 	return id, nil
 }
 
-func (r *repo) Get(ctx context.Context, id int64) (*model.Note, error) {
+func (r *repo) Get(ctx context.Context, id int64) (*model.TodoNote, error) {
 	builder := sq.Select(idColumn, titleColumn, contentColumn, createdAtColumn, updatedAtColumn).
 		PlaceholderFormat(sq.Dollar).
 		From(tableName).
@@ -74,7 +74,7 @@ func (r *repo) Get(ctx context.Context, id int64) (*model.Note, error) {
 		QueryRaw: query,
 	}
 
-	var note modelRepo.Note
+	var note modelRepo.TodoNote
 	err = r.db.DB().QueryRowContext(ctx, q, args...).Scan(&note.ID, &note.Info.Title, &note.Info.Content, &note.CreatedAt, &note.UpdatedAt)
 	if err != nil {
 		return nil, err

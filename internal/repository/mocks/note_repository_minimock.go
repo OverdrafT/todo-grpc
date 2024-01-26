@@ -11,7 +11,7 @@ import (
 	mm_time "time"
 
 	"github.com/gojuno/minimock/v3"
-	"github.com/olezhek28/microservices_course/week_4/internal/model"
+	"github.com/OverdrafT/todo-grpc/internal/model"
 )
 
 // NoteRepositoryMock implements repository.NoteRepository

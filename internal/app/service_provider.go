@@ -2,19 +2,17 @@ package app
 
 import (
 	"context"
+	"github.com/OverdrafT/todo-grpc/internal/config"
 	"log"
 
-	"github.com/olezhek28/platform_common/pkg/closer"
-	"github.com/olezhek28/platform_common/pkg/db"
-	"github.com/olezhek28/platform_common/pkg/db/pg"
-	"github.com/olezhek28/platform_common/pkg/db/transaction"
-
-	"github.com/olezhek28/microservices_course/week_4/internal/api/note"
-	"github.com/olezhek28/microservices_course/week_4/internal/config"
-	"github.com/olezhek28/microservices_course/week_4/internal/repository"
-	noteRepository "github.com/olezhek28/microservices_course/week_4/internal/repository/note"
-	"github.com/olezhek28/microservices_course/week_4/internal/service"
-	noteService "github.com/olezhek28/microservices_course/week_4/internal/service/note"
+	"github.com/OverdrafT/todo-grpc/internal/api/todo"
+	"github.com/OverdrafT/todo-grpc/internal/repository"
+	todoRepository "github.com/OverdrafT/todo-grpc/internal/repository/todo"
+	"github.com/OverdrafT/todo-grpc/internal/service"
+	todoService "github.com/OverdrafT/todo-grpc/internal/service/todo"
+	"github.com/OverdrafT/todo-grpc/pkg/closer"
+	"github.com/OverdrafT/todo-grpc/pkg/db"
+	"github.com/OverdrafT/todo-grpc/pkg/db/pg"
 )
 
 type serviceProvider struct {
@@ -23,11 +21,11 @@ type serviceProvider struct {
 
 	dbClient       db.Client
 	txManager      db.TxManager
-	noteRepository repository.NoteRepository
+	noteRepository repository.TodoRepository
 
-	noteService service.NoteService
+	noteService service.TodoService
 
-	noteImpl *note.Implementation
+	noteImpl *todo.Implementation
 }
 
 func newServiceProvider() *serviceProvider {
@@ -79,35 +77,27 @@ func (s *serviceProvider) DBClient(ctx context.Context) db.Client {
 	return s.dbClient
 }
 
-func (s *serviceProvider) TxManager(ctx context.Context) db.TxManager {
-	if s.txManager == nil {
-		s.txManager = transaction.NewTransactionManager(s.DBClient(ctx).DB())
-	}
-
-	return s.txManager
-}
-
-func (s *serviceProvider) NoteRepository(ctx context.Context) repository.NoteRepository {
+func (s *serviceProvider) TodoRepository(ctx context.Context) repository.TodoRepository {
 	if s.noteRepository == nil {
-		s.noteRepository = noteRepository.NewRepository(s.DBClient(ctx))
+		s.noteRepository = todoRepository.NewRepository(s.DBClient(ctx))
 	}
 
 	return s.noteRepository
 }
 
-func (s *serviceProvider) NoteService(ctx context.Context) service.NoteService {
+func (s *serviceProvider) TodoService(ctx context.Context) service.TodoService {
 	if s.noteService == nil {
-		s.noteService = noteService.NewService(
-			s.NoteRepository(ctx),
+		s.noteService = todoService.NewService(
+			s.TodoRepository(ctx),
 		)
 	}
 
 	return s.noteService
 }
 
-func (s *serviceProvider) NoteImpl(ctx context.Context) *note.Implementation {
+func (s *serviceProvider) NoteImpl(ctx context.Context) *todo.Implementation {
 	if s.noteImpl == nil {
-		s.noteImpl = note.NewImplementation(s.NoteService(ctx))
+		s.noteImpl = todo.NewImplementation(s.TodoService(ctx))
 	}
 
 	return s.noteImpl

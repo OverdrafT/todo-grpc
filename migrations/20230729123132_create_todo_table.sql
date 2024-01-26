@@ -1,5 +1,5 @@
 -- +goose Up
-create table note (
+create table todo (
     id serial primary key,
     title text not null,
     content text not null,
@@ -8,5 +8,5 @@ create table note (
 );
 
 -- +goose Down
-drop table note;
+drop table todo;
 

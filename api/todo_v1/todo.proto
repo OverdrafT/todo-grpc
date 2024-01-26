@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package note_v1;
+package todo_v1;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
@@ -8,7 +8,7 @@ import "google/protobuf/wrappers.proto";
 
 option go_package = "pkg/todo_v1;todo_v1";
 
-service NoteV1 {
+service TodoV1 {
   rpc Create(CreateRequest) returns (CreateResponse);
   rpc Get(GetRequest) returns (GetResponse);
   rpc List(ListRequest) returns (ListResponse);
@@ -16,19 +16,19 @@ service NoteV1 {
   rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
 }
 
-message NoteInfo {
+message TodoNoteInfo {
   string title = 1;
   string content = 2;
 }
 
-message Note {
+message TodoNote {
   int64 id = 1;
-  NoteInfo info = 2;
+  TodoNoteInfo info = 2;
   google.protobuf.Timestamp created_at = 3;
   google.protobuf.Timestamp updated_at = 4;
 }
 
-message UpdateNoteInfo {
+message UpdateTodoNoteInfo {
   google.protobuf.StringValue title = 1;
   google.protobuf.StringValue context = 2;
   google.protobuf.StringValue author = 3;
@@ -36,7 +36,7 @@ message UpdateNoteInfo {
 }
 
 message CreateRequest {
-  NoteInfo info = 1;
+  TodoNoteInfo info = 1;
 }
 
 message CreateResponse {
@@ -48,7 +48,7 @@ message GetRequest {
 }
 
 message GetResponse {
-  Note note = 1;
+  TodoNote note = 1;
 }
 
 message ListRequest {
@@ -57,12 +57,12 @@ message ListRequest {
 }
 
 message ListResponse {
-  repeated Note notes = 1;
+  repeated TodoNote notes = 1;
 }
 
 message UpdateRequest {
   int64 id = 1;
-  UpdateNoteInfo info = 2;
+  UpdateTodoNoteInfo info = 2;
 }
 
 message DeleteRequest {

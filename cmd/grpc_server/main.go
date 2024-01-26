@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/olezhek28/microservices_course/week_4/internal/app"
+	"github.com/OverdrafT/todo-grpc/internal/app"
 )
 
 func main() {

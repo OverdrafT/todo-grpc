@@ -1,15 +1,15 @@
-package note
+package todo
 
 import (
 	"context"
 	"log"
 
-	"github.com/olezhek28/microservices_course/week_4/internal/converter"
-	desc "github.com/olezhek28/microservices_course/week_4/pkg/note_v1"
+	"github.com/OverdrafT/todo-grpc/internal/converter"
+	desc "github.com/OverdrafT/todo-grpc/pkg/todo_v1"
 )
 
 func (i *Implementation) Get(ctx context.Context, req *desc.GetRequest) (*desc.GetResponse, error) {
-	noteObj, err := i.noteService.Get(ctx, req.GetId())
+	noteObj, err := i.todoService.Get(ctx, req.GetId())
 	if err != nil {
 		return nil, err
 	}

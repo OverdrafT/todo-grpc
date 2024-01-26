@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"github.com/OverdrafT/todo-grpc/internal/config"
 	"log"
 	"net"
 
@@ -9,10 +10,9 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 
-	"github.com/olezhek28/platform_common/pkg/closer"
+	"github.com/OverdrafT/todo-grpc/pkg/closer"
 
-	"github.com/olezhek28/microservices_course/week_4/internal/config"
-	desc "github.com/olezhek28/microservices_course/week_4/pkg/note_v1"
+	desc "github.com/OverdrafT/todo-grpc/pkg/todo_v1"
 )
 
 type App struct {
@@ -76,7 +76,7 @@ func (a *App) initGRPCServer(ctx context.Context) error {
 
 	reflection.Register(a.grpcServer)
 
-	desc.RegisterNoteV1Server(a.grpcServer, a.serviceProvider.NoteImpl(ctx))
+	desc.RegisterTodoV1Server(a.grpcServer, a.serviceProvider.NoteImpl(ctx))
 
 	return nil
 }
