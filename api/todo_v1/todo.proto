@@ -30,9 +30,7 @@ message TodoNote {
 
 message UpdateTodoNoteInfo {
   google.protobuf.StringValue title = 1;
-  google.protobuf.StringValue context = 2;
-  google.protobuf.StringValue author = 3;
-  google.protobuf.BoolValue is_public = 4;
+  google.protobuf.StringValue content = 2;
 }
 
 message CreateRequest {

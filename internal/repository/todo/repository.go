@@ -2,6 +2,7 @@ package todo
 
 import (
 	"context"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -44,7 +45,7 @@ func (r *repo) Create(ctx context.Context, info *model.TodoNoteInfo) (int64, err
 	}
 
 	q := db.Query{
-		Name:     "note_repository.Create",
+		Name:     "todo_repository.Create",
 		QueryRaw: query,
 	}
 
@@ -70,7 +71,7 @@ func (r *repo) Get(ctx context.Context, id int64) (*model.TodoNote, error) {
 	}
 
 	q := db.Query{
-		Name:     "note_repository.Get",
+		Name:     "todo_repository.Get",
 		QueryRaw: query,
 	}
 
@@ -80,5 +81,52 @@ func (r *repo) Get(ctx context.Context, id int64) (*model.TodoNote, error) {
 		return nil, err
 	}
 
-	return converter.ToNoteFromRepo(&note), nil
+	return converter.ToTodoFromRepo(&note), nil
+}
+
+func (r *repo) Update(ctx context.Context, id int64, info *model.TodoNoteInfo) error {
+	builder := sq.Update(tableName).Set(contentColumn, info.Content).Set(titleColumn, info.Title).Set(updatedAtColumn, time.Now()).Where(sq.Eq{idColumn: id}).PlaceholderFormat(sq.Dollar)
+
+	query, args, err := builder.ToSql()
+	if err != nil {
+		return err
+	}
+
+	q := db.Query{
+		Name:     "todo_repository.Update",
+		QueryRaw: query,
+	}
+
+	_, err = r.db.DB().ExecContext(ctx, q, args...)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *repo) Delete(ctx context.Context, id int64) error {
+	builder := sq.Delete(tableName).PlaceholderFormat(sq.Dollar).Where(sq.Eq{"id": id})
+
+	query, args, err := builder.ToSql()
+	if err != nil {
+		return err
+	}
+
+	q := db.Query{
+		Name:     "todo_repository.Delete",
+		QueryRaw: query,
+	}
+
+	_, err = r.db.DB().ExecContext(ctx, q, args...)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *repo) List(ctx context.Context) error {
+	//TODO implement me
+	panic("implement me")
 }

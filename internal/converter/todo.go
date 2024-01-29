@@ -34,3 +34,10 @@ func ToNoteInfoFromDesc(info *desc.TodoNoteInfo) *model.TodoNoteInfo {
 		Content: info.Content,
 	}
 }
+
+func ToUpdateNoteInfoFromDesc(info *desc.UpdateTodoNoteInfo) *model.TodoNoteInfo {
+	return &model.TodoNoteInfo{
+		Title:   info.Title.Value,
+		Content: info.Content.Value,
+	}
+}
